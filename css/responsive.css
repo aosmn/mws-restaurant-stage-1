@@ -1,0 +1,139 @@
+/* less than 450px */
+@media screen and (max-width: 450px) {
+  body {
+    position: relative;
+  }
+  header, nav {
+    height: 45px;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  nav h1 a {
+    color: #fff;
+    font-size: 12pt;
+    font-weight: 400;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  #maincontent {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #map-container {
+    width: 100%;
+  }
+  
+  #map {
+    height: 250px;
+    max-height: 250px;
+    transition: max-height .5s;
+  }
+  #filter {
+    width: 100%;
+  }
+  .filter-options {
+    display: flex;
+    height: auto;
+    width: 100%;
+    max-height: 50px;
+    align-items: center;
+    transition: max-height .5s;
+    /* justify-content: center; */
+  }
+  
+  .filter-options button{
+    width: 33%;
+    margin: 0 5px 0 15px;
+    background-color: var(--blue);
+    border: 0;
+    color: white;
+    height: 30px;
+    border-radius: 2px;
+    background-color: white;
+    color: var(--blue);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+  }
+  
+  #arrow {
+    font-size: 9pt
+  }
+  
+  .open #filter-fields {
+    transform: translateY(0px);
+  }
+  
+  .open.filter-options{
+    max-height: 500px;
+  }
+  
+  #map.smaller{
+    max-height: 200px;
+  }
+  
+  #filter-fields {
+    width: 67%;
+    /* position: relative; */
+    transform: translateY(-90px);
+    transition: transform .3s
+  }
+  
+  #filter-fields select:last-child {
+    margin-top: 0;
+  }
+  
+
+  
+  
+  /* restaurant page */
+  
+  #breadcrumb {
+    display: none;
+  }
+  
+  .inside #map-container {
+    width: 100%;
+    height: auto;
+    position: inherit;
+    margin-top: 45px;
+  }
+  .inside #map {
+    height: 200px;
+  }
+  .inside #restaurant-all {
+    width: 100%;
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center; */
+  }
+  
+  .inside #restaurant-container{
+    padding-top: 20px
+  }
+  .inside #restaurant-container,
+  .inside #reviews-container {
+    width: 100%;
+    /* padding: 20px; */
+  }
+  
+  .inside #restaurant-container h1,
+  .inside #reviews-container h2{
+    font-weight: 400;
+    font-size: 17pt;
+    /* margin-left: 5%; */
+    /* text-align: center; */
+  }
+  .inside #restaurant-container img {
+    width: 100%;
+  }
+  
+  
+  
+
+}

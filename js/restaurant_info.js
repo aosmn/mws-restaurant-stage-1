@@ -22,7 +22,7 @@ initMap = () => {
         scrollWheelZoom: false
       });
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-        mapboxToken: '<your MAPBOX API KEY HERE>',
+        mapboxToken: 'pk.eyJ1IjoiYW9zbW4iLCJhIjoiY2prOW1lYWV6MjJoNjN3cGFzZ3cybnhhbCJ9.MooMDpdnW4vnA4Aee7JnDQ',
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
           '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -114,10 +114,28 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     row.appendChild(day);
 
     const time = document.createElement('td');
-    time.innerHTML = operatingHours[key];
-    row.appendChild(time);
+    
+    if(operatingHours[key].indexOf(",") > -1){
+      const operatingHoursArr = operatingHours[key].split(",");
+      // console.log(operatingHours[key].split(","));
+      time.innerHTML = operatingHoursArr[0];
+      row.appendChild(time);
+      hours.appendChild(row);
+      for(i=1; i<operatingHoursArr.length; i++){
+        const hourRow = document.createElement('tr');
+        hourRow.appendChild(document.createElement('td'));
+        const hourCell = document.createElement('td');
+        hourCell.innerHTML = operatingHoursArr[1]
+        hourRow.append(hourCell);
+        hours.appendChild(hourRow);
+      }
 
-    hours.appendChild(row);
+    } else {
+      time.innerHTML = operatingHours[key];
+      row.appendChild(time);
+      hours.appendChild(row);
+    }
+    
   }
 }
 
@@ -150,18 +168,21 @@ createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.className = "user-name";
   li.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
+  date.className = "date";
   li.appendChild(date);
 
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.innerHTML = `Rating: <span class="rating">${review.rating}</span>`;
   li.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
+  comments.className = "comment";
   li.appendChild(comments);
 
   return li;
