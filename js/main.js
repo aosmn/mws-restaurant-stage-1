@@ -200,14 +200,17 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   content.append(address);
 
+  const moreContainer = document.createElement('div');
+  moreContainer.className = "actions";
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
+  moreContainer.append(more);
 
-  li.append(content)
-  li.append(more)
+  li.append(content);
+  li.append(moreContainer);
 
-  return li
+  return li;
 }
 
 /**

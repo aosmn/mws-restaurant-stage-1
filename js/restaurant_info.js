@@ -110,10 +110,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     const row = document.createElement('tr');
 
     const day = document.createElement('td');
+    day.className = "day";
     day.innerHTML = key;
     row.appendChild(day);
 
     const time = document.createElement('td');
+    time.className = "time";
     
     if(operatingHours[key].indexOf(",") > -1){
       const operatingHoursArr = operatingHours[key].split(",");
@@ -125,6 +127,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
         const hourRow = document.createElement('tr');
         hourRow.appendChild(document.createElement('td'));
         const hourCell = document.createElement('td');
+        hourCell.className = "time";
         hourCell.innerHTML = operatingHoursArr[1]
         hourRow.append(hourCell);
         hours.appendChild(hourRow);
