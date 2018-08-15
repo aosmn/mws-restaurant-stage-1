@@ -1,5 +1,6 @@
 /* less than 450px */
 @media screen and (max-width: 450px) {
+
   body {
     position: relative;
   }
@@ -24,8 +25,11 @@
     align-items: center;
     justify-content: center;
   }
-  
+  .inside #map-container {
+    margin-top: 45px;
+  }
   #map-container {
+    margin-top: 45px;
     width: 100%;
   }
   
@@ -122,7 +126,6 @@
     width: 100%;
     height: auto;
     position: inherit;
-    margin-top: 45px;
   }
   .inside #map {
     height: 200px;
@@ -165,12 +168,18 @@
     position: inherit;
     margin-top: 60px;
   }
+  #map-container {
+    margin-top: 60px;
+  }
   .inside #map {
     height: 250px;
   }  
 }
 
 @media screen and (min-width: 801px) {
+  #map-container {
+    margin-top: 60px;
+  }
   #breadcrumb {
     width: 100%;
     padding: 5px 40px 10px;
@@ -200,5 +209,6 @@
   .inside #map-container {
     width: 50%;
   	max-width: 500px;
+    margin-top: 0px;
   }
 }
