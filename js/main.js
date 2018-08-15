@@ -12,20 +12,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
   
+  const neighbourSelect = document.getElementById("neighborhoods-select");
+  const cuisineSelect = document.getElementById('cuisines-select');
+
+  if(window.innerWidth > 450){           
+    neighbourSelect.tabIndex = 0;
+    cuisineSelect.tabIndex = 0;
+  }
+  
   // show filter
   const filterBtn = document.getElementById('show-filter');
   filterBtn.addEventListener('click', () => {
     const filter = document.getElementsByClassName('filter-options')[0];
     const map = document.getElementById('map');
     const arrow = document.getElementById('arrow');
+    const btnText = document.getElementById('btnText');
     if (filter.classList.contains('open')) {
       filter.classList.remove('open');
       map.classList.remove('smaller');
-      arrow.innerHTML = "&#9660;"
+      arrow.innerHTML = "&#9660;";
+      btnText.innerHTML = "Show filters ";
+      neighbourSelect.tabIndex = -1;
+      cuisineSelect.tabIndex = -1;
     } else {
       filter.classList.add('open');
       map.classList.add('smaller');
-      arrow.innerHTML = "&#9650;"
+      arrow.innerHTML = "&#9650;";
+      btnText.innerHTML = "Hide filters ";
+      neighbourSelect.tabIndex = 0;
+      cuisineSelect.tabIndex = 0;
     }
   });
   
@@ -184,6 +199,8 @@ createRestaurantHTML = (restaurant) => {
   
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  const altText = `Photo of restaurant ${restaurant.name}, ${restaurant.cuisine_type} cuisine`;
+  image.setAttribute('alt', altText);
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   imageContainer.append(image);
   li.append(imageContainer);
@@ -204,6 +221,7 @@ createRestaurantHTML = (restaurant) => {
   moreContainer.className = "actions";
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
+  more.setAttribute('aria-label', `${restaurant.name}, view restaurant details`)
   more.href = DBHelper.urlForRestaurant(restaurant);
   moreContainer.append(more);
 

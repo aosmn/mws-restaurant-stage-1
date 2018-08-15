@@ -49,9 +49,10 @@
   
   .filter-options button{
     display: block;
-    width: 33%;
+    width: 40%;
+    max-width: 40%;
     margin: 0 5px 0 15px;
-    background-color: var(--blue);
+    /* background-color: var(--blue); */
     border: 0;
     color: white;
     height: 30px;
@@ -64,6 +65,10 @@
   
   #arrow {
     font-size: 9pt
+  }
+  
+  #filter-fields select{
+    max-width: calc(100% - 20px)
   }
   
   .open #filter-fields {
@@ -79,7 +84,7 @@
   }
   
   #filter-fields {
-    width: 67%;
+    width: 60%;
     /* position: relative; */
     transform: translateY(-90px);
     transition: transform .3s
@@ -99,7 +104,11 @@
   	/* bottom: 0; */
   }
   
-  /* restaurant page */
+  #footer {
+  	height: 50px;
+  	position: fixed;
+  	bottom: 0;
+  }
   
 }
 
