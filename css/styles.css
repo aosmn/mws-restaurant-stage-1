@@ -5,6 +5,7 @@
 	--blue: #3a3a59;
 	--secondary: #db3b61;
 	--links: #9F1D3C;
+	--white: #dbedf3;
 }
 
 * {
@@ -306,7 +307,7 @@ header {
 	padding-bottom: 5px;
 	margin-bottom: 5px;
 }
-#restaurant-img {
+#restaurant-img img{
 	width: 100%;
 }
 #restaurant-address {
@@ -413,4 +414,65 @@ header {
 }
 .date {
   /* margin-top: -10px */
+}
+
+
+#simple-toast button{
+  text-decoration: underline;
+  background: rgba(0, 0, 0, 0);
+  border: 0;
+  color: #fff;
+  font-size: inherit;
+	text-transform: uppercase;
+  /* font-family: 'san', sans-serif; */
+  padding: 0;
+}
+
+#simple-toast button:first-child{
+  margin-left: .5rem;
+}
+
+#simple-toast {
+  height: 100%;
+	background: var(--links);
+  width: 100%;
+  font-size: 1rem;
+  color: #fff;
+  position: absolute;
+  bottom: -45px;
+  transition: bottom 1s;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.visible {
+  bottom: 0 !important;
+}
+
+#simple-toast a {
+  color: #fff;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 6px;
+    height: 6px;
+}
+
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #eee;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--blue);
+		border-radius: 5px
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue);
 }

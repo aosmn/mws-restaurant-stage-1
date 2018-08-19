@@ -41,7 +41,11 @@
       <div id="restaurant-all">
         <section id="restaurant-container">
           <h1 id="restaurant-name"></h1>
-          <img id="restaurant-img">
+          <picture id="restaurant-img">
+            <source id="src-lrg" media="(min-width: 800px)">
+            <source id="src-med" media="(min-width: 500px)">
+            <img id="restaurant-image">
+          </picture>
           <p id="restaurant-cuisine"></p>
           <div id="restaurant-details">
             <p id="restaurant-address"></p>
@@ -61,6 +65,7 @@
 
   <!-- Beginning footer -->
   <footer id="footer">
+    <div id="simple-toast">A new version is available <button id="refresh">refresh</button> <button id="dismiss">dismiss</button></div>
     <span>Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.</span>
   </footer>
   <!-- End footer -->

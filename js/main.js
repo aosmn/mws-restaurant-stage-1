@@ -197,12 +197,24 @@ createRestaurantHTML = (restaurant) => {
   const imageContainer = document.createElement('div');
   imageContainer.className = 'restaurant-img-container';
   
+  const picture = document.createElement('picture');
+  const src_large = document.createElement('source');
+  src_large.setAttribute('media', '(min-width: 800px)');
+  src_large.setAttribute('srcset', `${DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.jpg 1x, ${DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.jpg 2x`);
+  const src_med = document.createElement('source');
+  src_med.setAttribute('media', '(min-width: 800px)');
+  src_med.setAttribute('srcset', `${DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.jpg 1x, ${DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.jpg 2x`);
+  
+  picture.append(src_large);
+  picture.append(src_med);
+  
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  const altText = `Photo of restaurant ${restaurant.name}, ${restaurant.cuisine_type} cuisine`;
+  const altText = `restaurant ${restaurant.name}, ${restaurant.cuisine_type} cuisine`;
   image.setAttribute('alt', altText);
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  imageContainer.append(image);
+  image.src = DBHelper.imageUrlForRestaurant(restaurant) + '-600_small.jpg';
+  picture.append(image);
+  imageContainer.append(picture);
   li.append(imageContainer);
 
   const name = document.createElement('h1');
@@ -257,3 +269,72 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 } */
 
+// =============================================================================
+var serviceWorker = {};
+const registerServiceWorker = () => {
+  if (!navigator.serviceWorker) return;
+  navigator.serviceWorker.register('../sw.js').then(reg => {
+    if (!navigator.serviceWorker.controller) {
+      return;
+    }
+
+    if (reg.waiting) {
+      serviceWorker = reg.waiting;
+      updateReady(reg.waiting);
+      return;
+    }
+
+    if (reg.installing) {
+      serviceWorker = reg.installing;
+      trackInstalling(reg.installing);
+      return;
+    }
+
+    reg.addEventListener('updatefound', () => {
+      serviceWorker = reg.installing;
+      trackInstalling(reg.installing);
+    });
+  });
+
+  // Ensure refresh is only called once.
+  // This works around a bug in "force update on reload".
+  let refreshing;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    window.location.reload();
+    refreshing = true;
+  });
+};
+
+const trackInstalling = worker => {
+  worker.addEventListener('statechange', () => {
+    if (worker.state == 'installed') {
+      updateReady(worker);
+    }
+  });
+};
+
+
+const updateReady = (worker) => {
+  const toast = document.getElementById("simple-toast");
+  toast.setAttribute("class", "visible")
+};
+
+registerServiceWorker();
+
+
+
+// USING PURE JS To AVOID NEEDING TO CACHE JQUERY , SAVE MEMORY
+document.addEventListener("DOMContentLoaded", () => {
+  const toast = document.getElementById('simple-toast');
+  const refresh = document.getElementById('refresh');
+  const dismiss = document.getElementById('dismiss');
+
+  refresh.onclick = e => {
+      console.log("refreshed");
+      serviceWorker.postMessage({action: 'skipWaiting'});
+  }
+  dismiss.onclick = e => {
+    toast.setAttribute("class", "")
+  }
+});

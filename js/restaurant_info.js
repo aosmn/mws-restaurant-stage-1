@@ -86,10 +86,24 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
+  // 
+  // <picture>
+  //     <source media="(min-width: 800px)" srcset="images/still_life-1600_large_1x.jpg 1x, images/still_life-1600_large_2x.jpg 2x">
+  //     <source media="(min-width: 500px)" srcset="images/still_life-800_medium_1x.jpg 1x, images/still_life-8_medium_2x.jpg 2x">
+  //     <img src="images/still_life-600_small.jpg" alt="Image of horses in hawaii">
+  //   </picture>
+
+  const picture = document.getElementById('restaurant-img');
+  const src_large = document.getElementById('src-lrg');
+  src_large.setAttribute('srcset', `${DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.jpg 1x, ${DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.jpg 2x`);
+  const src_med = document.getElementById('src-med');
+  src_med.setAttribute('srcset', `${DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.jpg 1x, ${DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.jpg 2x`);
+
+  const image = document.getElementById('restaurant-image');
   image.className = 'restaurant-img'
-  image.setAttribute('alt', `Photo of restaurant ${restaurant.name}, ${restaurant.cuisine_type} cuisine`) 
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('alt', `restaurant ${restaurant.name}, ${restaurant.cuisine_type} cuisine`) ;
+  image.src = `${DBHelper.imageUrlForRestaurant(restaurant)}-600_small.jpg`;
+
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -217,3 +231,74 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
+// =============================================================================
+var serviceWorker = {};
+const registerServiceWorker = () => {
+  if (!navigator.serviceWorker) return;
+  navigator.serviceWorker.register('../sw.js').then(reg => {
+    if (!navigator.serviceWorker.controller) {
+      return;
+    }
+
+    if (reg.waiting) {
+      serviceWorker = reg.waiting;
+      updateReady(reg.waiting);
+      return;
+    }
+
+    if (reg.installing) {
+      serviceWorker = reg.installing;
+      trackInstalling(reg.installing);
+      return;
+    }
+
+    reg.addEventListener('updatefound', () => {
+      serviceWorker = reg.installing;
+      trackInstalling(reg.installing);
+    });
+  });
+
+  // Ensure refresh is only called once.
+  // This works around a bug in "force update on reload".
+  let refreshing;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    window.location.reload();
+    refreshing = true;
+  });
+};
+
+const trackInstalling = worker => {
+  worker.addEventListener('statechange', () => {
+    if (worker.state == 'installed') {
+      updateReady(worker);
+    }
+  });
+};
+
+
+const updateReady = (worker) => {
+  const toast = document.getElementById("simple-toast");
+  toast.setAttribute("class", "visible")
+};
+
+registerServiceWorker();
+
+
+
+// USING PURE JS To AVOID NEEDING TO CACHE JQUERY , SAVE MEMORY
+document.addEventListener("DOMContentLoaded", () => {
+  const toast = document.getElementById('simple-toast');
+  const refresh = document.getElementById('refresh');
+  const dismiss = document.getElementById('dismiss');
+
+  refresh.onclick = e => {
+      console.log("refreshed");
+      serviceWorker.postMessage({action: 'skipWaiting'});
+  }
+  dismiss.onclick = e => {
+    toast.setAttribute("class", "")
+  }
+});
