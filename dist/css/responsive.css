@@ -1,0 +1,238 @@
+/* less than 450px */
+@media screen and (max-width: 450px) {
+
+  body {
+    position: relative;
+  }
+  header, nav {
+    height: 45px;
+  }
+  nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  nav h1 a {
+    color: #fff;
+    font-size: 12pt;
+    font-weight: 400;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  #maincontent {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    width: 100%;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  .inside #map-container {
+    margin-top: 45px;
+  }
+  #map-container {
+    margin-top: 45px;
+    width: 100%;
+  }
+  
+  #map {
+    height: 250px;
+    max-height: 250px;
+    -webkit-transition: max-height .5s;
+    transition: max-height .5s;
+  }
+  #filter {
+    width: 100%;
+  }
+  .filter-options {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: auto;
+    width: 100%;
+    max-height: 50px;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-transition: max-height .5s;
+    transition: max-height .5s;
+    /* justify-content: center; */
+  }
+  
+  .filter-options button{
+    display: block;
+    width: 40%;
+    max-width: 40%;
+    margin: 0 5px 0 15px;
+    /* background-color: var(--blue); */
+    border: 0;
+    color: white;
+    height: 30px;
+    border-radius: 2px;
+    background-color: white;
+    color: var(--blue);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+  }
+  
+  #arrow {
+    font-size: 9pt
+  }
+  
+  #filter-fields select{
+    max-width: calc(100% - 20px)
+  }
+  
+  .open #filter-fields {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  
+  .open.filter-options{
+    max-height: 500px;
+  }
+  
+  #map.smaller{
+    max-height: 200px;
+  }
+  
+  #filter-fields {
+    width: 60%;
+    /* position: relative; */
+    -webkit-transform: translateY(-90px);
+            transform: translateY(-90px);
+    -webkit-transition: -webkit-transform .3s;
+    transition: -webkit-transform .3s;
+    transition: transform .3s;
+    transition: transform .3s, -webkit-transform .3s
+  }
+  
+  #filter-fields select:last-child {
+    margin-top: 0;
+  }
+  
+  #restaurants-list li {
+    height: auto;
+    position: inherit;
+  }
+  #restaurants-list li .actions {
+  	width: 100%;
+  	position: inherit;
+  	/* bottom: 0; */
+  }
+  
+  #footer {
+  	height: 50px;
+  	position: fixed;
+  	bottom: 0;
+  }
+  
+}
+
+@media screen and (max-width: 800px) {
+  
+  #breadcrumb {
+    display: none;
+  }
+  
+  .inside #map-container {
+    width: 100%;
+    height: auto;
+    position: inherit;
+  }
+  .inside #map {
+    height: 200px;
+  }
+  .inside #restaurant-all {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center; */
+  }
+  
+  .inside #restaurant-container{
+    padding-top: 20px
+  }
+  .inside #restaurant-container,
+  .inside #reviews-container {
+    width: 100%;
+    /* padding: 20px; */
+  }
+  
+  .inside #restaurant-container h1,
+  .inside #reviews-container h2{
+    font-weight: 400;
+    font-size: 17pt;
+    /* margin-left: 5%; */
+    /* text-align: center; */
+  }
+  .inside #restaurant-container img {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 451px) and (max-width: 800px) {
+  
+  .inside #map-container {
+    width: 100%;
+    height: auto;
+    position: inherit;
+    margin-top: 60px;
+  }
+  #map-container {
+    margin-top: 60px;
+  }
+  .inside #map {
+    height: 250px;
+  }  
+}
+
+@media screen and (min-width: 801px) {
+  #map-container {
+    margin-top: 60px;
+  }
+  #breadcrumb {
+    width: 100%;
+    padding: 5px 40px 10px;
+  }
+  
+  #restaurant-all {
+    padding: 0;
+  }
+  
+  .inside #maincontent {
+    margin: auto; 
+  	position: fixed;
+    top: 100px;
+    height: calc(100% - 140px);
+    overflow: hidden;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    width: 100%;
+  }
+  
+  .inside .main {
+    /* margin: auto; 
+  	position: fixed; */
+    position: relative;
+    height: 100%;
+  }
+  
+  .inside #map-container {
+    width: 50%;
+  	max-width: 500px;
+    margin-top: 0px;
+  }
+}

@@ -1,11 +1,18 @@
-import DBHelper from './dbhelper';
+'use strict';
+
+var _dbhelper = require('./dbhelper');
+
+var _dbhelper2 = _interopRequireDefault(_dbhelper);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // let restaurant;
-let newMap;
+var newMap = void 0;
 
 /**
  * Initialize map as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
 	initMap();
 });
 
@@ -13,15 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
  * Initialize leaflet map
  */
 /*eslint-disable*/
-const initMap = () => {
-	fetchRestaurantFromURL((error, restaurant) => {
-		if (error) { // Got an error!
+var initMap = function initMap() {
+	fetchRestaurantFromURL(function (error, restaurant) {
+		if (error) {
+			// Got an error!
 			console.error(error);
 		} else {
 			self.newMap = L.map('map', {
-				center: [
-					restaurant.latlng.lat, restaurant.latlng.lng
-				],
+				center: [restaurant.latlng.lat, restaurant.latlng.lng],
 				zoom: 16,
 				scrollWheelZoom: false
 			});
@@ -32,7 +38,7 @@ const initMap = () => {
 				id: 'mapbox.streets'
 			}).addTo(newMap);
 			fillBreadcrumb();
-			DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
+			_dbhelper2.default.mapMarkerForRestaurant(self.restaurant, self.newMap);
 		}
 	});
 };
@@ -58,17 +64,19 @@ const initMap = () => {
  * Get current restaurant from page URL.
  */
 /* eslint-disable no-console*/
-const fetchRestaurantFromURL = (callback) => {
-	if (self.restaurant) { // restaurant already fetched!
+var fetchRestaurantFromURL = function fetchRestaurantFromURL(callback) {
+	if (self.restaurant) {
+		// restaurant already fetched!
 		callback(null, self.restaurant);
 		return;
 	}
-	const id = getParameterByName('id');
-	if (!id) { // no id found in URL
-		const error = 'No restaurant id in URL';
+	var id = getParameterByName('id');
+	if (!id) {
+		// no id found in URL
+		var error = 'No restaurant id in URL';
 		callback(error, null);
 	} else {
-		DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+		_dbhelper2.default.fetchRestaurantById(id, function (error, restaurant) {
 			self.restaurant = restaurant;
 			if (!restaurant) {
 				console.error(error);
@@ -84,11 +92,13 @@ const fetchRestaurantFromURL = (callback) => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
-const fillRestaurantHTML = (restaurant = self.restaurant) => {
-	const name = document.getElementById('restaurant-name');
+var fillRestaurantHTML = function fillRestaurantHTML() {
+	var restaurant = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : self.restaurant;
+
+	var name = document.getElementById('restaurant-name');
 	name.innerHTML = restaurant.name;
 
-	const address = document.getElementById('restaurant-address');
+	var address = document.getElementById('restaurant-address');
 	address.innerHTML = restaurant.address;
 
 	//
@@ -99,22 +109,17 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 	//   </picture>
 
 	// const picture = document.getElementById('restaurant-img');
-	const srcLarge = document.getElementById('src-lrg');
-	srcLarge.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.jpg 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.jpg 2x`);
-	const srcMed = document.getElementById('src-med');
-	srcMed.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.jpg 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.jpg 2x`);
+	var srcLarge = document.getElementById('src-lrg');
+	srcLarge.setAttribute('srcset', _dbhelper2.default.imageUrlForRestaurant(restaurant) + '-1600_large_1x.jpg 1x, ' + _dbhelper2.default.imageUrlForRestaurant(restaurant) + '-1600_large_2x.jpg 2x');
+	var srcMed = document.getElementById('src-med');
+	srcMed.setAttribute('srcset', _dbhelper2.default.imageUrlForRestaurant(restaurant) + '-800_medium_1x.jpg 1x, ' + _dbhelper2.default.imageUrlForRestaurant(restaurant) + '-800_medium_2x.jpg 2x');
 
-	const image = document.getElementById('restaurant-image');
+	var image = document.getElementById('restaurant-image');
 	image.className = 'restaurant-img';
-	image.setAttribute('alt', `restaurant ${
-		restaurant.name}, ${restaurant.cuisine_type} cuisine`);
-	image.src = `${DBHelper.imageUrlForRestaurant(restaurant)}-600_small.jpg`;
+	image.setAttribute('alt', 'restaurant ' + restaurant.name + ', ' + restaurant.cuisine_type + ' cuisine');
+	image.src = _dbhelper2.default.imageUrlForRestaurant(restaurant) + '-600_small.jpg';
 
-	const cuisine = document.getElementById('restaurant-cuisine');
+	var cuisine = document.getElementById('restaurant-cuisine');
 	cuisine.innerHTML = restaurant.cuisine_type;
 
 	// fill operating hours
@@ -128,62 +133,63 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
-const fillRestaurantHoursHTML =
-(operatingHours = self.restaurant.operating_hours) => {
-	const hours = document.getElementById('restaurant-hours');
-	for (const key in operatingHours) {
-		const row = document.createElement('tr');
+var fillRestaurantHoursHTML = function fillRestaurantHoursHTML() {
+	var operatingHours = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : self.restaurant.operating_hours;
 
-		const day = document.createElement('td');
+	var hours = document.getElementById('restaurant-hours');
+	for (var key in operatingHours) {
+		var row = document.createElement('tr');
+
+		var day = document.createElement('td');
 		day.className = 'day';
 		day.innerHTML = key;
 		row.appendChild(day);
 
-		const time = document.createElement('td');
+		var time = document.createElement('td');
 		time.className = 'time';
 
 		if (operatingHours[key].indexOf(',') > -1) {
-			const operatingHoursArr = operatingHours[key].split(',');
+			var operatingHoursArr = operatingHours[key].split(',');
 			// console.log(operatingHours[key].split(","));
 			time.innerHTML = operatingHoursArr[0];
 			row.appendChild(time);
 			hours.appendChild(row);
-			for (let i = 1; i < operatingHoursArr.length; i++) {
-				const hourRow = document.createElement('tr');
+			for (var i = 1; i < operatingHoursArr.length; i++) {
+				var hourRow = document.createElement('tr');
 				hourRow.appendChild(document.createElement('td'));
-				const hourCell = document.createElement('td');
+				var hourCell = document.createElement('td');
 				hourCell.className = 'time';
 				hourCell.innerHTML = operatingHoursArr[1];
 				hourRow.append(hourCell);
 				hours.appendChild(hourRow);
 			}
-
 		} else {
 			time.innerHTML = operatingHours[key];
 			row.appendChild(time);
 			hours.appendChild(row);
 		}
-
 	}
 };
 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-	const container = document.getElementById('reviews-container');
-	const title = document.createElement('h2');
+var fillReviewsHTML = function fillReviewsHTML() {
+	var reviews = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : self.restaurant.reviews;
+
+	var container = document.getElementById('reviews-container');
+	var title = document.createElement('h2');
 	title.innerHTML = 'Reviews';
 	container.appendChild(title);
 
 	if (!reviews) {
-		const noReviews = document.createElement('p');
+		var noReviews = document.createElement('p');
 		noReviews.innerHTML = 'No reviews yet!';
 		container.appendChild(noReviews);
 		return;
 	}
-	const ul = document.getElementById('reviews-list');
-	reviews.forEach(review => {
+	var ul = document.getElementById('reviews-list');
+	reviews.forEach(function (review) {
 		ul.appendChild(createReviewHTML(review));
 	});
 	container.appendChild(ul);
@@ -192,23 +198,23 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 /**
  * Create review HTML and add it to the webpage.
  */
-const createReviewHTML = (review) => {
-	const li = document.createElement('li');
-	const name = document.createElement('p');
+var createReviewHTML = function createReviewHTML(review) {
+	var li = document.createElement('li');
+	var name = document.createElement('p');
 	name.innerHTML = review.name;
 	name.className = 'user-name';
 	li.appendChild(name);
 
-	const date = document.createElement('p');
+	var date = document.createElement('p');
 	date.innerHTML = review.date;
 	date.className = 'date';
 	li.appendChild(date);
 
-	const rating = document.createElement('p');
-	rating.innerHTML = `Rating: <span class="rating">${review.rating}</span>`;
+	var rating = document.createElement('p');
+	rating.innerHTML = 'Rating: <span class="rating">' + review.rating + '</span>';
 	li.appendChild(rating);
 
-	const comments = document.createElement('p');
+	var comments = document.createElement('p');
 	comments.innerHTML = review.comments;
 	comments.className = 'comment';
 	li.appendChild(comments);
@@ -219,9 +225,11 @@ const createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-const fillBreadcrumb = (restaurant = self.restaurant) => {
-	const breadcrumb = document.getElementById('breadcrumb');
-	const li = document.createElement('li');
+var fillBreadcrumb = function fillBreadcrumb() {
+	var restaurant = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : self.restaurant;
+
+	var breadcrumb = document.getElementById('breadcrumb');
+	var li = document.createElement('li');
 	li.innerHTML = restaurant.name;
 	breadcrumb.appendChild(li);
 };
@@ -231,26 +239,22 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
  */
 /* eslint-disable no-useless-escape*/
 
-const getParameterByName = (name, url) => {
-	if (!url)
-		url = window.location.href;
+var getParameterByName = function getParameterByName(name, url) {
+	if (!url) url = window.location.href;
 	name = name.replace(/[\[\]]/g, '\\$&');
-	const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-		results = regex.exec(url);
-	if (!results)
-		return null;
-	if (!results[2])
-		return '';
+	var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+	    results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
 	return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 /* eslint-disable no-useless-escape*/
 
 // =============================================================================
-let serviceWorker = {};
-const registerServiceWorker = () => {
-	if (!navigator.serviceWorker)
-		return;
-	navigator.serviceWorker.register('../sw.js').then(reg => {
+var serviceWorker = {};
+var registerServiceWorker = function registerServiceWorker() {
+	if (!navigator.serviceWorker) return;
+	navigator.serviceWorker.register('../sw.js').then(function (reg) {
 		if (!navigator.serviceWorker.controller) {
 			return;
 		}
@@ -267,7 +271,7 @@ const registerServiceWorker = () => {
 			return;
 		}
 
-		reg.addEventListener('updatefound', () => {
+		reg.addEventListener('updatefound', function () {
 			serviceWorker = reg.installing;
 			trackInstalling(reg.installing);
 		});
@@ -275,41 +279,40 @@ const registerServiceWorker = () => {
 
 	// Ensure refresh is only called once.
 	// This works around a bug in "force update on reload".
-	let refreshing;
-	navigator.serviceWorker.addEventListener('controllerchange', () => {
-		if (refreshing)
-			return;
+	var refreshing = void 0;
+	navigator.serviceWorker.addEventListener('controllerchange', function () {
+		if (refreshing) return;
 		window.location.reload();
 		refreshing = true;
 	});
 };
 
-const trackInstalling = worker => {
-	worker.addEventListener('statechange', () => {
+var trackInstalling = function trackInstalling(worker) {
+	worker.addEventListener('statechange', function () {
 		if (worker.state == 'installed') {
 			updateReady(worker);
 		}
 	});
 };
 
-const updateReady = () => {
-	const toast = document.getElementById('simple-toast');
+var updateReady = function updateReady() {
+	var toast = document.getElementById('simple-toast');
 	toast.setAttribute('class', 'visible');
 };
 
 registerServiceWorker();
 
 // USING PURE JS To AVOID NEEDING TO CACHE JQUERY , SAVE MEMORY
-document.addEventListener('DOMContentLoaded', () => {
-	const toast = document.getElementById('simple-toast');
-	const refresh = document.getElementById('refresh');
-	const dismiss = document.getElementById('dismiss');
+document.addEventListener('DOMContentLoaded', function () {
+	var toast = document.getElementById('simple-toast');
+	var refresh = document.getElementById('refresh');
+	var dismiss = document.getElementById('dismiss');
 
-	refresh.onclick = () => {
+	refresh.onclick = function () {
 		// console.log('refreshed');
-		serviceWorker.postMessage({action: 'skipWaiting'});
+		serviceWorker.postMessage({ action: 'skipWaiting' });
 	};
-	dismiss.onclick = () => {
+	dismiss.onclick = function () {
 		toast.setAttribute('class', '');
 	};
 });

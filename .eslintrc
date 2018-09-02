@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "rules": {
+    "no-console": 1,
+    "no-extra-semi": 1,
+    "semi": 1,
+    "no-const-assign": 2,
+    "no-var": 1,
+    "prefer-const": 1,
+    "arrow-spacing": 1,
+    "no-duplicate-imports": 1,
+    "camelcase": 1,
+    "consistent-this": 1,
+    "indent": ["warn", "tab"],
+    "max-len": ["warn", { "ignoreComments": true}],
+    "object-property-newline": 1,
+    "quotes": [1, "single"],
+  }
+}
