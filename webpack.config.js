@@ -1,11 +1,14 @@
 const path = require('path');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 module.exports = {
 	mode: 'development',
-	entry: './js/main.js',
+	entry: {
+		app: './js/main.js',
+		restaurant: './js/restaurant_info.js'
+	},
 	output: {
 		path: path.resolve(__dirname, 'dist/js'),
-		filename: 'app.bundle.js'
+		filename: '[name].bundle.js'
 	},
 	module: {
 		rules: [
@@ -13,6 +16,9 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel-loader' }
 		]
+	},
+	externals: {
+		leaflet: 'leaflet'
 	},
 	stats: {
 		colors: true

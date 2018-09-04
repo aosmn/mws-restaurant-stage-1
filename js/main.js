@@ -1,9 +1,9 @@
 import DBHelper from './dbhelper';
-let restaurants,
+var restaurants,
   neighborhoods,
   cuisines
-let newMap;
-let markers = [];
+var newMap;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -121,7 +121,7 @@ const initMap = () => {
 		maxZoom: 18,
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' + '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		id: 'mapbox.streets'
-	}).addTo(newMap);
+	}).addTo(self.newMap);
 
 	updateRestaurants();
 }

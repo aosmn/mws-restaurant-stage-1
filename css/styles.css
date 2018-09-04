@@ -9,9 +9,10 @@
 
 * {
 	box-sizing: border-box;
+	font-family: "Open Sans", Helvetica, "Arial", sans-serif;
 }
 #map a {
-	color: var(--links);	
+	color: var(--links);
 }
 body,td,th,p{
 	font-family: "Open Sans", Helvetica, sans-serif;
@@ -23,7 +24,7 @@ body {
 	background-color: #fdfdfd;
 	margin: 0;
 	position:relative;
-	width: 100vw;
+	width: 100%;
 }
 ul, li {
 	font-family: "Open Sans", Helvetica, sans-serif;
@@ -34,10 +35,17 @@ a {
 	color: var(--links);
 	text-decoration: none;
 }
+
+
 a:hover, a:focus {
 	color: var(--blue);
 	text-decoration: none;
 }
+
+h1 a:hover {
+	color: var(--secondary) !important;
+}
+
 a img{
 	border: none 0px #fff;
 }
@@ -337,10 +345,10 @@ header {
 }
 
 #restaurant-details table .day{
-	text-align: left;	
+	text-align: left;
 }
 #restaurant-details table .time{
-	text-align: right;	
+	text-align: right;
 }
 .inside #restaurant-all {
 	width: 50%;

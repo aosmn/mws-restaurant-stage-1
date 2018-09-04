@@ -8,12 +8,8 @@
     height: 45px;
   }
   nav {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    align-items: center;
   }
   nav h1 a {
     color: #fff;
@@ -23,18 +19,11 @@
     text-transform: uppercase;
   }
   #maincontent {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     width: 100%;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    align-items: center;
+    justify-content: center;
   }
   .inside #map-container {
     margin-top: 45px;
@@ -47,23 +36,17 @@
   #map {
     height: 250px;
     max-height: 250px;
-    -webkit-transition: max-height .5s;
     transition: max-height .5s;
   }
   #filter {
     width: 100%;
   }
   .filter-options {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     height: auto;
     width: 100%;
     max-height: 50px;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-transition: max-height .5s;
+    align-items: center;
     transition: max-height .5s;
     /* justify-content: center; */
   }
@@ -93,8 +76,7 @@
   }
   
   .open #filter-fields {
-    -webkit-transform: translateY(0px);
-            transform: translateY(0px);
+    transform: translateY(0px);
   }
   
   .open.filter-options{
@@ -108,12 +90,8 @@
   #filter-fields {
     width: 60%;
     /* position: relative; */
-    -webkit-transform: translateY(-90px);
-            transform: translateY(-90px);
-    -webkit-transition: -webkit-transform .3s;
-    transition: -webkit-transform .3s;
-    transition: transform .3s;
-    transition: transform .3s, -webkit-transform .3s
+    transform: translateY(-90px);
+    transition: transform .3s
   }
   
   #filter-fields select:last-child {
@@ -217,9 +195,7 @@
     top: 100px;
     height: calc(100% - 140px);
     overflow: hidden;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    justify-content: center;
     width: 100%;
   }
   
