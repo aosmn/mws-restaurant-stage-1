@@ -1,4 +1,6 @@
 import DBHelper from './dbhelper';
+import {replaceWebp} from './webp';
+
 // let restaurant;
 let newMap;
 
@@ -85,38 +87,33 @@ const fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
+	const imageSrc = '.webp';
+
+	const imgURL = DBHelper.imageUrlForRestaurant(restaurant);
+
 	const name = document.getElementById('restaurant-name');
 	name.innerHTML = restaurant.name;
 
 	const address = document.getElementById('restaurant-address');
 	address.innerHTML = restaurant.address;
 
-	//
-	// <picture>
-	//     <source media="(min-width: 800px)" srcset="images/still_life-1600_large_1x.jpg 1x, images/still_life-1600_large_2x.jpg 2x">
-	//     <source media="(min-width: 500px)" srcset="images/still_life-800_medium_1x.jpg 1x, images/still_life-8_medium_2x.jpg 2x">
-	//     <img src="images/still_life-600_small.jpg" alt="Image of horses in hawaii">
-	//   </picture>
 
-	// const picture = document.getElementById('restaurant-img');
 	const srcLarge = document.getElementById('src-lrg');
-	srcLarge.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.webp 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.webp 2x`);
+	srcLarge.setAttribute('srcset', `${imgURL}-1600_large_1x${imageSrc} 1x, ${
+		imgURL}-1600_large_2x${imageSrc} 2x`);
 	const srcMed = document.getElementById('src-med');
-	srcMed.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.webp 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.webp 2x`);
+	srcMed.setAttribute('srcset', `${imgURL}-800_medium_1x${imageSrc} 1x, ${
+		imgURL}-800_medium_2x${imageSrc} 2x`);
 
 	const image = document.getElementById('restaurant-image');
 	image.className = 'restaurant-img';
 	image.setAttribute('alt', `restaurant ${
 		restaurant.name}, ${restaurant.cuisine_type} cuisine`);
-	image.src = `${DBHelper.imageUrlForRestaurant(restaurant)}-600_small.webp`;
+	image.src = `${imgURL}-600_small${imageSrc}`;
 
 	const cuisine = document.getElementById('restaurant-cuisine');
 	cuisine.innerHTML = restaurant.cuisine_type;
-
+	replaceWebp();
 	// fill operating hours
 	if (restaurant.operating_hours) {
 		fillRestaurantHoursHTML();

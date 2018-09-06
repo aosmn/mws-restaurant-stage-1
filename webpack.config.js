@@ -1,4 +1,5 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // const CompressionPlugin = require('compression-webpack-plugin');
 // const webpack = require('webpack');
 module.exports = {
@@ -13,9 +14,11 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.js$/,
+			{
+				test: /\.js$/,
 				exclude: /node_modules/,
-				loader: 'babel-loader' }
+				loader: 'babel-loader'
+			}
 		]
 	},
 	externals: {
@@ -25,6 +28,10 @@ module.exports = {
 		colors: true
 	},
 	devtool: 'source-map',
+	optimization: {
+		minimize: true,
+		minimizer: [new UglifyJsPlugin()]
+	}
 	// plugins: [
 	// 	new CompressionPlugin({test: /\.js/})
 	// ]

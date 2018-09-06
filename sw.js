@@ -50,7 +50,7 @@ self.addEventListener('fetch', event => {
 		return response || fetch(event.request).then(res => {
 			return caches.open(staticCacheName).then(cache => {
 				// console.log("hereee");
-				// cache.put(event.request, res.clone());
+				cache.put(event.request, res.clone());
 				return res;
 			});
 		});

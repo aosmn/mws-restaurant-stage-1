@@ -1,7 +1,9 @@
 import DBHelper from './dbhelper';
+import {lazyload, iswebp} from './lazyload';
+import {replaceWebp} from './webp.js'
 var restaurants,
-  neighborhoods,
-  cuisines
+	neighborhoods,
+	cuisines
 var newMap;
 var markers = [];
 
@@ -107,7 +109,7 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize leaflet map, called from HTML.
  */
-/*eslint-disable*/
+/* eslint-disable */
 const initMap = () => {
 	self.newMap = L.map('map', {
 		center: [
@@ -125,7 +127,7 @@ const initMap = () => {
 
 	updateRestaurants();
 }
-/*eslint-enable*/
+/* eslint-enable */
 
 /* window.initMap = () => {
   let loc = {
@@ -154,17 +156,14 @@ const updateRestaurants = () => {
 	const cuisine = cSelect[cIndex].value;
 	const neighborhood = nSelect[nIndex].value;
 
-	DBHelper.fetchRestaurantByCuisineAndNeighborhood(
-		cuisine,
-		neighborhood,
-		(error, restaurants) => {
-			if (error) { // Got an error!
-				console.error(error);
-			} else {
-				resetRestaurants(restaurants);
-				fillRestaurantsHTML();
-			}
-		});
+	DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+		if (error) { // Got an error!
+			console.error(error);
+		} else {
+			resetRestaurants(restaurants);
+			fillRestaurantsHTML();
+		}
+	});
 };
 /* eslint-enable no-console */
 /**
@@ -192,6 +191,8 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 	restaurants.forEach(restaurant => {
 		ul.append(createRestaurantHTML(restaurant));
 	});
+	lazyload();
+	replaceWebp();
 	addMarkersToMap();
 };
 
@@ -205,30 +206,42 @@ const createRestaurantHTML = (restaurant) => {
 
 	const imageContainer = document.createElement('div');
 	imageContainer.className = 'restaurant-img-container';
+	const imageSrc = '.webp';
+	// iswebp(() => { imageSrc = '.jpg'; });
 
-	const picture = document.createElement('picture');
-	const srcLarge = document.createElement('source');
-	srcLarge.setAttribute('media', '(min-width: 800px)');
-	srcLarge.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.webp 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.webp 2x`);
-	const srcMed = document.createElement('source');
-	srcMed.setAttribute('media', '(min-width: 800px)');
-	srcMed.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.webp 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.webp 2x`);
-
-	picture.append(srcLarge);
-	picture.append(srcMed);
 
 	const image = document.createElement('img');
 	image.className = 'restaurant-img';
 	const altText = `restaurant ${
 		restaurant.name}, ${restaurant.cuisine_type} cuisine`;
+
+	const picture = document.createElement('picture');
+	const srcLarge = document.createElement('source');
+	const srcMed = document.createElement('source');
+
+	const imgURL = 'img/nophoto';
+
+	srcLarge.setAttribute('media', '(min-width: 800px)');
+	srcLarge.setAttribute('srcset', `${
+		imgURL
+	}-1600_large_1x${imageSrc} 1x`);
+
+	srcMed.setAttribute('media', '(min-width: 800px)');
+	srcMed.setAttribute('srcset', `${
+		imgURL
+	}-800_medium_1x${imageSrc} 1x, ${
+		imgURL
+	}-800_medium_2x${imageSrc} 2x`);
+
+	picture.append(srcLarge);
+	picture.append(srcMed);
+
+
 	image.setAttribute('alt', altText);
-	image.src = DBHelper.imageUrlForRestaurant(restaurant) + '-600_small.webp';
-	// picture.append(image);
-	imageContainer.append(image);
+	image.src = `${imgURL}-600_small${imageSrc}`;
+	image.setAttribute('data-id', DBHelper.imageUrlForRestaurant(restaurant));
+	picture.append(image);
+	imageContainer.append(picture);
 	li.append(imageContainer);
 
 	const name = document.createElement('h1');
@@ -247,8 +260,7 @@ const createRestaurantHTML = (restaurant) => {
 	moreContainer.className = 'actions';
 	const more = document.createElement('a');
 	more.innerHTML = 'View Details';
-	more.setAttribute('aria-label', `${
-		restaurant.name}, view restaurant details`);
+	more.setAttribute('aria-label', `${restaurant.name}, view restaurant details`);
 	more.href = DBHelper.urlForRestaurant(restaurant);
 	moreContainer.append(more);
 
