@@ -1,4 +1,5 @@
 const path = require('path');
+// const CompressionPlugin = require('compression-webpack-plugin');
 // const webpack = require('webpack');
 module.exports = {
 	mode: 'development',
@@ -23,5 +24,8 @@ module.exports = {
 	stats: {
 		colors: true
 	},
-	devtool: 'source-map'
+	devtool: 'source-map',
+	// plugins: [
+	// 	new CompressionPlugin({test: /\.js/})
+	// ]
 };

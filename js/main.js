@@ -210,13 +210,13 @@ const createRestaurantHTML = (restaurant) => {
 	const srcLarge = document.createElement('source');
 	srcLarge.setAttribute('media', '(min-width: 800px)');
 	srcLarge.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.jpg 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.jpg 2x`);
+		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_1x.webp 1x, ${
+		DBHelper.imageUrlForRestaurant(restaurant)}-1600_large_2x.webp 2x`);
 	const srcMed = document.createElement('source');
 	srcMed.setAttribute('media', '(min-width: 800px)');
 	srcMed.setAttribute('srcset', `${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.jpg 1x, ${
-		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.jpg 2x`);
+		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_1x.webp 1x, ${
+		DBHelper.imageUrlForRestaurant(restaurant)}-800_medium_2x.webp 2x`);
 
 	picture.append(srcLarge);
 	picture.append(srcMed);
@@ -226,9 +226,9 @@ const createRestaurantHTML = (restaurant) => {
 	const altText = `restaurant ${
 		restaurant.name}, ${restaurant.cuisine_type} cuisine`;
 	image.setAttribute('alt', altText);
-	image.src = DBHelper.imageUrlForRestaurant(restaurant) + '-600_small.jpg';
-	picture.append(image);
-	imageContainer.append(picture);
+	image.src = DBHelper.imageUrlForRestaurant(restaurant) + '-600_small.webp';
+	// picture.append(image);
+	imageContainer.append(image);
 	li.append(imageContainer);
 
 	const name = document.createElement('h1');
