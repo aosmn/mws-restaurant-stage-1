@@ -22,7 +22,7 @@ module.exports = {
 		]
 	},
 	externals: {
-		leaflet: 'leaflet'
+		leaflet: 'leaflet',
 	},
 	stats: {
 		colors: true
@@ -30,7 +30,9 @@ module.exports = {
 	devtool: 'source-map',
 	optimization: {
 		minimize: true,
-		minimizer: [new UglifyJsPlugin()]
+		minimizer: [new UglifyJsPlugin({
+			sourceMap: true
+		})]
 	}
 	// plugins: [
 	// 	new CompressionPlugin({test: /\.js/})

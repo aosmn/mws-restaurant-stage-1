@@ -14,7 +14,7 @@ export function lazyload() {
 		if(image.getBoundingClientRect().top < window.innerHeight){
 			srcLarge.setAttribute('srcset', `${
 				imgURL
-			}-1600_large_1x${imageSrc} 1x`);
+			}-1200_large_1x${imageSrc} 1x`);
 
 			srcMed.setAttribute('srcset', `${
 				imgURL

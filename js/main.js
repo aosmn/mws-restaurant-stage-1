@@ -1,11 +1,15 @@
 import DBHelper from './dbhelper';
-import {lazyload, iswebp} from './lazyload';
-import {replaceWebp} from './webp.js'
+import {lazyload} from './lazyload';
+import {replaceWebp} from './webp.js';
+/* eslint-disable */
 var restaurants,
 	neighborhoods,
 	cuisines
 var newMap;
 var markers = [];
+/* eslint-enable */
+
+
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -156,14 +160,15 @@ const updateRestaurants = () => {
 	const cuisine = cSelect[cIndex].value;
 	const neighborhood = nSelect[nIndex].value;
 
-	DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-		if (error) { // Got an error!
-			console.error(error);
-		} else {
-			resetRestaurants(restaurants);
-			fillRestaurantsHTML();
-		}
-	});
+	DBHelper.fetchRestaurantByCuisineAndNeighborhood(
+		cuisine, neighborhood, (error, restaurants) => {
+			if (error) { // Got an error!
+				console.error(error);
+			} else {
+				resetRestaurants(restaurants);
+				fillRestaurantsHTML();
+			}
+		});
 };
 /* eslint-enable no-console */
 /**
@@ -224,7 +229,7 @@ const createRestaurantHTML = (restaurant) => {
 	srcLarge.setAttribute('media', '(min-width: 800px)');
 	srcLarge.setAttribute('srcset', `${
 		imgURL
-	}-1600_large_1x${imageSrc} 1x`);
+	}-1200_large_1x${imageSrc} 1x`);
 
 	srcMed.setAttribute('media', '(min-width: 800px)');
 	srcMed.setAttribute('srcset', `${
@@ -260,7 +265,8 @@ const createRestaurantHTML = (restaurant) => {
 	moreContainer.className = 'actions';
 	const more = document.createElement('a');
 	more.innerHTML = 'View Details';
-	more.setAttribute('aria-label', `${restaurant.name}, view restaurant details`);
+	more.setAttribute('aria-label', `${
+		restaurant.name}, view restaurant details`);
 	more.href = DBHelper.urlForRestaurant(restaurant);
 	moreContainer.append(more);
 

@@ -16,11 +16,11 @@ module.exports = function(grunt) {
 					engine: 'im',
 					sizes: [
 						{
-							width: 1600,
+							width: 1200,
 							suffix: '_large_2x',
 							quality: 100
 						}, {
-							width: 1600,
+							width: 1200,
 							suffix: '_large_1x',
 							quality: 80
 						}, {

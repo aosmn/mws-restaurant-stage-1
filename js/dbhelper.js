@@ -4,6 +4,16 @@ import 'whatwg-fetch';
  */
 /*eslint no-unused-vars: "error"*/
 
+const dbPromise = idb.open('restaurant-reviews-db', 1, upgradeDb => {
+	let resStore = {};
+	switch (upgradeDb.oldVersion) {
+	case 0:
+		resStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+		resStore.createIndex('id', 'id');
+	}
+});
+
+
 class DBHelper {
 
 	/**
@@ -20,13 +30,39 @@ class DBHelper {
    */
 	static fetchRestaurants(id) {
 		let url = DBHelper.DATABASE_URL;
+
 		if (id) {
 			url+= `/${id}`;
+			return fetch(url).then((res) => {
+				// console.log(res.json());
+				return res.json();
+			}).catch(() => {
+				return dbPromise.then(db => {
+					const tx = db.transaction('restaurants');
+					const objectStore = tx.objectStore('restaurants');
+					return objectStore.get(parseInt(id));
+				}).then((restaurant) => {
+					console.log('from db');
+					if (restaurant)
+						return restaurant;
+				});
+			});
 		}
 		return fetch(url).then((res) => {
 			// console.log(res.json());
 			return res.json();
+		}).catch(() => {
+			return dbPromise.then(db => {
+				const tx = db.transaction('restaurants');
+				const objectStore = tx.objectStore('restaurants');
+				return objectStore.getAll();
+			}).then((restaurants) => {
+				if (restaurants && restaurants.length > 0)
+					return restaurants;
+			});
 		});
+
+
 	}
 
 	/**
@@ -35,17 +71,24 @@ class DBHelper {
 	static fetchRestaurantById(id, callback) {
 		// fetch all restaurants with proper error handling.
 		DBHelper.fetchRestaurants(id).then((restaurant) => {
-			console.log(restaurant);
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			// const restaurant = restaurants.find(r => r.id == id);
 			if (restaurant) { // Got the restaurant
-				callback(null, restaurant);
+				dbPromise.then(function(db) {
+					const tx = db.transaction('restaurants', 'readwrite');
+					const objectStore = tx.objectStore('restaurants');
+					objectStore.put(restaurant); // returns a promise
+					return tx.complete;
+				}).then(function() {
+					// console.log('success');
+					callback(null, restaurant);
+				});
 			} else { // Restaurant does not exist in the database
 				callback('Restaurant does not exist', null);
 			}
-			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 
@@ -55,14 +98,14 @@ class DBHelper {
 	static fetchRestaurantByCuisine(cuisine, callback) {
 		// Fetch all restaurants  with proper error handling
 		DBHelper.fetchRestaurants().then((restaurants) => {
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			// Filter restaurants to have only given cuisine type
 			const results = restaurants.filter(r =>
 				r.cuisine_type == cuisine);
 			callback(null, results);
-			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 
@@ -72,14 +115,14 @@ class DBHelper {
 	static fetchRestaurantByNeighborhood(neighborhood, callback) {
 		// Fetch all restaurants
 		DBHelper.fetchRestaurants().then((restaurants) => {
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			// Filter restaurants to have only given neighborhood
 			const results = restaurants.filter(r =>
 				r.neighborhood == neighborhood);
 			callback(null, results);
-			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 
@@ -92,10 +135,18 @@ class DBHelper {
 		callback) {
 		// Fetch all restaurants
 		DBHelper.fetchRestaurants().then((restaurants) => {
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			let results = restaurants;
+			dbPromise.then(function(db) {
+				const tx = db.transaction('restaurants', 'readwrite');
+				const objectStore = tx.objectStore('restaurants');
+				for (let i = 0; i < results.length; i++) {
+					const restaurant = results[i];
+					objectStore.put(restaurant); // returns a promise
+				}
+				return tx.complete;
+			}).then(function() {
+				console.log('success');
+			});
 			if (cuisine != 'all') { // filter by cuisine
 				results = results.filter(r => r.cuisine_type == cuisine);
 			}
@@ -104,7 +155,10 @@ class DBHelper {
 					r.neighborhood == neighborhood);
 			}
 			callback(null, results);
-			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 
@@ -114,9 +168,6 @@ class DBHelper {
 	static fetchNeighborhoods(callback) {
 		// Fetch all restaurants
 		DBHelper.fetchRestaurants().then((restaurants) => {
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			// Get all neighborhoods from all restaurants
 			const neighborhoods = restaurants.map((v, i) =>
 				restaurants[i].neighborhood);
@@ -124,7 +175,10 @@ class DBHelper {
 			const uniqueNeighborhoods = neighborhoods.filter((v, i) =>
 				neighborhoods.indexOf(v) == i);
 			callback(null, uniqueNeighborhoods);
-			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 
@@ -134,9 +188,6 @@ class DBHelper {
 	static fetchCuisines(callback) {
 		// Fetch all restaurants
 		DBHelper.fetchRestaurants().then((restaurants) => {
-			// if (error) {
-			// 	callback(error, null);
-			// } else {
 			// Get all cuisines from all restaurants
 			const cuisines = restaurants.map((v, i) =>
 				restaurants[i].cuisine_type);
@@ -145,6 +196,10 @@ class DBHelper {
 				cuisines.indexOf(v) == i);
 			callback(null, uniqueCuisines);
 			// }
+		}).catch(function(error){
+			if (error) {
+				callback(error, null);
+			}
 		});
 	}
 

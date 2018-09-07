@@ -1,5 +1,6 @@
 const staticCacheName = 'restaurant-static-v1';
-const allCaches = [staticCacheName];
+const imagesCache = 'restaurant-images';
+const allCaches = [staticCacheName, imagesCache];
 
 // console.log("lala");
 
@@ -11,7 +12,8 @@ self.addEventListener('install', event => {
 			'/css/styles.css',
 			'/css/responsive.css',
 			'/js/restaurant.bundle.js',
-			'/js/app.bundle.js'
+			'/js/app.bundle.js',
+			'/js/indexedDB.js'
 		]);
 	}));
 });
@@ -48,9 +50,10 @@ self.addEventListener('fetch', event => {
 	event.respondWith(caches.match(event.request,
 		{ignoreSearch: true}).then(response => {
 		return response || fetch(event.request).then(res => {
-			return caches.open(staticCacheName).then(cache => {
-				// console.log("hereee");
-				cache.put(event.request, res.clone());
+			return caches.open(imagesCache).then(cache => {
+				if (event.request.url.indexOf('/restaurants') == -1) {
+					cache.put(event.request, res.clone());
+				}
 				return res;
 			});
 		});

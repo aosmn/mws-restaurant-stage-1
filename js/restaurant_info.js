@@ -99,8 +99,8 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
 
 	const srcLarge = document.getElementById('src-lrg');
-	srcLarge.setAttribute('srcset', `${imgURL}-1600_large_1x${imageSrc} 1x, ${
-		imgURL}-1600_large_2x${imageSrc} 2x`);
+	srcLarge.setAttribute('srcset', `${imgURL}-1200_large_1x${imageSrc} 1x, ${
+		imgURL}-1200_large_2x${imageSrc} 2x`);
 	const srcMed = document.getElementById('src-med');
 	srcMed.setAttribute('srcset', `${imgURL}-800_medium_1x${imageSrc} 1x, ${
 		imgURL}-800_medium_2x${imageSrc} 2x`);
