@@ -7,19 +7,33 @@
     "copy-html": "copyfiles index.html restaurant.html dist",
     "copy-styles": "copyfiles css/* dist",
     "copy-scripts": "copyfiles -f js/indexedDB.js dist/js",
-		"copy-sw": "copyfiles sw.js dist",
-		"copy-manifest": "copyfiles manifest.json dist",
-		"process-images": "grunt",
-		"crunch-images": "imagemin -p jpegoptim img/* --out-dir=dist/img",
+    "copy-sw": "copyfiles sw.js dist",
+
+    "precopy-manifest": "copyfiles icon.png dist/img",
+    "copy-manifest": "copyfiles manifest.json dist",
+
+    "process-images": "grunt",
+    "crunch-images": "imagemin -p jpegoptim img/* --out-dir=dist/img",
     "webp-images": "imagemin -p webp img/* --out-dir=dist/img",
-		"predist-images":  "npm run process-images",
-		"dist-images": "npm-run-all crunch-images webp-images",
-		"webpack": "webpack",
-    "copy-to-dist": "npm-run-all copy-html copy-sw copy-styles copy-scripts",
-    "prestart": "npm-run-all webpack copy-to-dist",
+    "predist-images": "npm run process-images",
+
+    "dist-images": "npm run crunch-images ",
+    "postdist-images": "npm run webp-images",
+
+    "webpack": "webpack",
+		"copy-to-dist": "npm-run-all copy-html copy-sw copy-styles copy-scripts dist-images",
+		"postcopy-to-dist": "npm run copy-manifest",
+
+		"build": "npm-run-all webpack copy-to-dist",
+
+    "prestart": "npm run build",
     "start": "browser-sync start --no-open --server 'dist' --files 'dist'",
-    "build": "npm-run-all webpack copy-to-dist",
-    "watch-start": "nodemon --ignore dist/ -e js,html,css -x \"npm run start\""
+
+		"copy-to-dist-dev": "npm-run-all copy-html copy-sw copy-styles copy-scripts",
+
+    "prestart-dev": "npm-run-all webpack copy-to-dist-dev",
+    "start-dev": "browser-sync start --no-open --server 'dist' --files 'dist'",
+		"watch-start": "nodemon --ignore dist/ -e js,html,css -x \"npm run start-dev\""
   },
   "repository": {
     "type": "git",

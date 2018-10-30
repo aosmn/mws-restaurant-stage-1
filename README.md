@@ -3,8 +3,8 @@
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
 ## Usage
-
-Code is built in dist folder. To run the application run `npm run start` or just start an http server in dist folder
+This project uses npm scripts to build and process distribution files.
+To run the application run `npm run start` after installing node packages using `npm install`
 
 ## Leaflet.js and Mapbox:
 

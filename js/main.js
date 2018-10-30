@@ -9,7 +9,20 @@ var newMap;
 var markers = [];
 /* eslint-enable */
 
+function updateIndicator(e) {
+	const snackbar = document.getElementById('snackbar');
+	// Show a different icon based on offline/online
+	if (e.type == "offline") {
+		snackbar.className = "show";
+	} else if (e.type == "online") {
+		snackbar.className = snackbar.className.replace("show", "");
+	}
+}
 
+// Update the online status icon based on connectivity
+window.addEventListener('online',  updateIndicator);
+window.addEventListener('offline', updateIndicator);
+// updateIndicator();
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -209,6 +222,24 @@ const createRestaurantHTML = (restaurant) => {
 	const content = document.createElement('div');
 	content.classList.add('content');
 
+	const favoriteBtn = document.createElement('button');
+	favoriteBtn.className = 'favorite';
+	favoriteBtn.innerHTML = '&#9734;';
+
+	favoriteBtn.setAttribute('aria-label', `Add ${
+		restaurant.name} to favorites`);
+
+	favoriteBtn.addEventListener('click', (e) => {
+		console.log(e.target);
+		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
+			favoriteBtn.innerHTML = '&#9733;'
+		} else {
+			favoriteBtn.innerHTML = '&#9734;'
+		}
+	});
+
+
+
 	const imageContainer = document.createElement('div');
 	imageContainer.className = 'restaurant-img-container';
 	const imageSrc = '.webp';
@@ -251,6 +282,7 @@ const createRestaurantHTML = (restaurant) => {
 
 	const name = document.createElement('h2');
 	name.innerHTML = restaurant.name;
+	content.append(favoriteBtn);
 	content.append(name);
 
 	const neighborhood = document.createElement('p');

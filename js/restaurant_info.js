@@ -4,11 +4,36 @@ import {replaceWebp} from './webp';
 // let restaurant;
 let newMap;
 
+function updateIndicator(e) {
+	const snackbar = document.getElementById('snackbar');
+	// Show a different icon based on offline/online
+	if (e.type == "offline") {
+		snackbar.className = "show";
+	} else if (e.type == "online") {
+		snackbar.className = snackbar.className.replace("show", "");
+	}
+}
+
+// Update the online status icon based on connectivity
+window.addEventListener('online',  updateIndicator);
+window.addEventListener('offline', updateIndicator);
+
+
 /**
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', () => {
 	initMap();
+
+	const favoriteBtn = document.getElementsByClassName('favorite')[0];
+	favoriteBtn.addEventListener('click', (e) => {
+		console.log(e.target);
+		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
+			favoriteBtn.innerHTML = '&#9733;'
+		} else {
+			favoriteBtn.innerHTML = '&#9734;'
+		}
+	});
 });
 
 /**

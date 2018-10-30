@@ -30,6 +30,7 @@
 		</nav>
     <!-- End breadcrumb -->
     <!-- End nav -->
+		<div id="snackbar">Offline, please check your network settings</div>
   </header>
   <!-- End header -->
 
@@ -44,13 +45,19 @@
       <!-- Beginning restaurant -->
       <div id="restaurant-all">
         <section id="restaurant-container">
-          <h2 id="restaurant-name"></h2>
+					<div class="title">
+
+						<h2 id="restaurant-name"></h2>
+						<button type="button" class="favorite" aria-label="Add restaurant to favorites">☆</button>
+					</div>
           <picture id="restaurant-img">
             <source id="src-lrg" media="(min-width: 800px)">
             <source id="src-med" media="(min-width: 500px)">
             <img id="restaurant-image">
           </picture>
-          <p id="restaurant-cuisine"></p>
+          <p id="restaurant-cuisine">
+
+          </p>
           <div id="restaurant-details">
             <p id="restaurant-address"></p>
             <table id="restaurant-hours"></table>
