@@ -224,18 +224,36 @@ const createRestaurantHTML = (restaurant) => {
 
 	const favoriteBtn = document.createElement('button');
 	favoriteBtn.className = 'favorite';
-	favoriteBtn.innerHTML = '&#9734;';
+
+	if (restaurant.is_favorite == 'true') {
+		favoriteBtn.innerHTML = '&#9733;';
+	} else {
+		favoriteBtn.innerHTML = '&#9734;';
+	}
 
 	favoriteBtn.setAttribute('aria-label', `Add ${
 		restaurant.name} to favorites`);
 
 	favoriteBtn.addEventListener('click', (e) => {
-		console.log(e.target);
+		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
+		var data = {is_favorite: 'false'};
+		var btnHtml = '&#9734;'
+
 		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
-			favoriteBtn.innerHTML = '&#9733;'
-		} else {
-			favoriteBtn.innerHTML = '&#9734;'
+			data = {is_favorite: 'true'};
+			btnHtml = '&#9733;'
 		}
+
+		fetch(url, {
+			method: 'PUT', // or 'PUT'
+			body: JSON.stringify(data), // data can be `string` or {object}!
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		}).then(res => {
+			favoriteBtn.innerHTML = btnHtml;
+		})
+		.catch(error => console.error('Error:', error));
 	});
 
 

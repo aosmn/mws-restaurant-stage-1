@@ -27,12 +27,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const favoriteBtn = document.getElementsByClassName('favorite')[0];
 	favoriteBtn.addEventListener('click', (e) => {
-		console.log(e.target);
+		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
+		var data = {is_favorite: 'false'};
+		var btnHtml = '&#9734;'
+
 		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
-			favoriteBtn.innerHTML = '&#9733;'
-		} else {
-			favoriteBtn.innerHTML = '&#9734;'
+			data = {is_favorite: 'true'};
+			btnHtml = '&#9733;'
 		}
+
+		fetch(url, {
+			method: 'PUT', // or 'PUT'
+			body: JSON.stringify(data), // data can be `string` or {object}!
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		}).then(res => {
+			favoriteBtn.innerHTML = btnHtml;
+		})
+		.catch(error => console.error('Error:', error));
 	});
 });
 
@@ -112,6 +125,11 @@ const fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
+	const favoriteBtn = document.getElementsByClassName('favorite')[0];
+	if (restaurant.is_favorite == 'true') {
+		favoriteBtn.innerHTML = '&#9733;'
+	}
+
 	const imageSrc = '.webp';
 
 	const imgURL = DBHelper.imageUrlForRestaurant(restaurant);
