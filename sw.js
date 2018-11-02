@@ -37,7 +37,7 @@ self.addEventListener('fetch', event => {
 		{ignoreSearch: true}).then(response => {
 		return response || fetch(event.request).then(res => {
 			return caches.open(imagesCache).then(cache => {
-				if (event.request.url.indexOf('/restaurants') == -1) {
+				if (event.request.url.indexOf('/restaurants') == -1 && event.request.method != "POST" && event.request.url.indexOf('/reviews') == -1) {
 					cache.put(event.request, res.clone());
 				}
 				return res;

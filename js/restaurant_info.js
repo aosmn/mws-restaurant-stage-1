@@ -25,20 +25,74 @@ window.addEventListener('offline', updateIndicator);
 document.addEventListener('DOMContentLoaded', () => {
 	initMap();
 
+	const addReview = document.getElementById('add-review');
+	const starBtns = document.getElementsByClassName('star-rate');
+	const ratingInput = document.getElementsByClassName('rating-input')[0];
+	const reviewRatingInput = document.getElementById('rating');
+	const ratingError = document.getElementById('rating-error');
+
+	addReview.addEventListener('submit', (e) => {
+		e.preventDefault();
+		// console.log(e.target.username.value);
+		// console.log(e.target.comments.value);
+		// console.log(e.target.rating.value);
+		ratingError.style.display = "none";
+
+		if (e.target.rating.value) {
+			var url = `http://localhost:1337/reviews/`;
+			var data = {name: e.target.username.value,
+				comments: e.target.comments.value,
+				rating: e.target.rating.value,
+				restaurant_id: self.restaurant.id};
+				fetch(url, {
+					method: 'POST', // or 'PUT'
+					body: JSON.stringify(data), // data can be `string` or {object}!
+					headers:{
+						'Content-Type': 'application/json'
+					}
+				}).then(res => res.json())
+				.then(review => {
+					const ul = document.getElementById('reviews-list');
+					ul.appendChild(createReviewHTML(review));
+					addReview.reset()
+					for (var i = 0; i < starBtns.length; i++) {
+						starBtns[i].innerHTML = '&#9734;';
+					}
+				})
+				.catch(error => console.error('Error:', error));
+		} else {
+			ratingError.style.display = "inherit";
+		}
+	});
+
+	ratingInput.addEventListener('click', (e) => {
+		const rate = parseInt(e.target.name.replace('rate', ''));
+		ratingError.style.display = 'none';
+		reviewRatingInput.value = rate;
+		e.target['aria-checked'] = 'true';
+		for (var i = 0; i < starBtns.length; i++) {
+			starBtns[i].innerHTML = (i < rate) ? '&#9733;' : '&#9734;';
+			starBtns[i]['aria-checked'] = 'false';
+		}
+	});
+
 	const favoriteBtn = document.getElementsByClassName('favorite')[0];
 	favoriteBtn.addEventListener('click', (e) => {
 		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
-		var data = {is_favorite: 'false'};
+		// var data = {is_favorite: 'false'};
 		var btnHtml = '&#9734;'
+		var isChecked = 'false';
 
 		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
-			data = {is_favorite: 'true'};
-			btnHtml = '&#9733;'
+			// data = {is_favorite: 'true'};
+			btnHtml = '&#9733;';
+			isChecked = 'true';
 		}
+		favoriteBtn.setAttribute('aria-checked', isChecked);
 
 		fetch(url, {
 			method: 'PUT', // or 'PUT'
-			body: JSON.stringify(data), // data can be `string` or {object}!
+			body: JSON.stringify({is_favorite: isChecked}), // data can be `string` or {object}!
 			headers:{
 				'Content-Type': 'application/json'
 			}
@@ -128,6 +182,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 	const favoriteBtn = document.getElementsByClassName('favorite')[0];
 	if (restaurant.is_favorite == 'true') {
 		favoriteBtn.innerHTML = '&#9733;'
+		favoriteBtn.setAttribute('aria-checked', 'true');
 	}
 
 	const imageSrc = '.webp';
@@ -210,23 +265,34 @@ const fillRestaurantHoursHTML =
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+const fillReviewsHTML = (restaurant = self.restaurant) => {
 	const container = document.getElementById('reviews-container');
 	const title = document.createElement('h2');
 	title.innerHTML = 'Reviews';
 	container.appendChild(title);
 
-	if (!reviews) {
-		const noReviews = document.createElement('p');
-		noReviews.innerHTML = 'No reviews yet!';
-		container.appendChild(noReviews);
-		return;
-	}
-	const ul = document.getElementById('reviews-list');
-	reviews.forEach(review => {
-		ul.appendChild(createReviewHTML(review));
-	});
-	container.appendChild(ul);
+	var url = `http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`;
+
+	fetch(url, {
+		method: 'GET', // or 'PUT'
+		headers:{
+			'Content-Type': 'application/json'
+		}
+	}).then(res => res.json())
+	.then(reviews => {
+		if (!reviews) {
+			const noReviews = document.createElement('p');
+			noReviews.innerHTML = 'No reviews yet!';
+			container.appendChild(noReviews);
+			return;
+		}
+		const ul = document.getElementById('reviews-list');
+		reviews.forEach(review => {
+			ul.appendChild(createReviewHTML(review));
+		});
+		container.appendChild(ul);
+	})
+	.catch(error => console.error('Error:', error));
 };
 
 /**
@@ -240,7 +306,7 @@ const createReviewHTML = (review) => {
 	li.appendChild(name);
 
 	const date = document.createElement('p');
-	date.innerHTML = review.date;
+	date.innerHTML = new Date(review.createdAt).toUTCString();
 	date.className = 'date';
 	li.appendChild(date);
 
@@ -340,7 +406,11 @@ const trackInstalling = worker => {
 
 const updateReady = () => {
 	const toast = document.getElementById('simple-toast');
+	const refresh = document.getElementById('refresh');
+	const dismiss = document.getElementById('dismiss');
 	toast.setAttribute('class', 'visible');
+	refresh.setAttribute('disabled', 'false');
+	dismiss.setAttribute('disabled', 'false');
 };
 
 registerServiceWorker();
@@ -357,5 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 	dismiss.onclick = () => {
 		toast.setAttribute('class', '');
+		refresh.setAttribute('disabled', 'true');
+		dismiss.setAttribute('disabled', 'true');
 	};
 });

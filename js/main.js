@@ -227,26 +227,32 @@ const createRestaurantHTML = (restaurant) => {
 
 	if (restaurant.is_favorite == 'true') {
 		favoriteBtn.innerHTML = '&#9733;';
+		favoriteBtn.setAttribute('aria-checked', 'true');
 	} else {
 		favoriteBtn.innerHTML = '&#9734;';
+		favoriteBtn.setAttribute('aria-checked', 'false');
 	}
 
 	favoriteBtn.setAttribute('aria-label', `Add ${
 		restaurant.name} to favorites`);
+	favoriteBtn.setAttribute('role', 'checkbox');
 
 	favoriteBtn.addEventListener('click', (e) => {
 		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
 		var data = {is_favorite: 'false'};
 		var btnHtml = '&#9734;'
+		var isChecked = 'false'
 
 		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
-			data = {is_favorite: 'true'};
-			btnHtml = '&#9733;'
+			isChecked = 'true';
+			btnHtml = '&#9733;';
 		}
+
+		favoriteBtn.setAttribute('aria-checked', isChecked);
 
 		fetch(url, {
 			method: 'PUT', // or 'PUT'
-			body: JSON.stringify(data), // data can be `string` or {object}!
+			body: JSON.stringify({is_favorite: isChecked}), // data can be `string` or {object}!
 			headers:{
 				'Content-Type': 'application/json'
 			}
@@ -401,7 +407,11 @@ const trackInstalling = worker => {
 
 const updateReady = () => {
 	const toast = document.getElementById('simple-toast');
+	const refresh = document.getElementById('refresh');
+	const dismiss = document.getElementById('dismiss');
 	toast.setAttribute('class', 'visible');
+	refresh.setAttribute('disabled', 'false');
+	dismiss.setAttribute('disabled', 'false');
 };
 
 registerServiceWorker();
@@ -418,5 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 	dismiss.onclick = () => {
 		toast.setAttribute('class', '');
+		refresh.setAttribute('disabled', 'true');
+		dismiss.setAttribute('disabled', 'true');
 	};
 });

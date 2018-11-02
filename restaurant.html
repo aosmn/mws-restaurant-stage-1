@@ -48,7 +48,7 @@
 					<div class="title">
 
 						<h2 id="restaurant-name"></h2>
-						<button type="button" class="favorite" aria-label="Add restaurant to favorites">☆</button>
+						<button type="button" class="favorite" aria-label="Add restaurant to favorites"  role="checkbox" aria-checked="false">☆</button>
 					</div>
           <picture id="restaurant-img">
             <source id="src-lrg" media="(min-width: 800px)">
@@ -65,8 +65,48 @@
         </section>
         <!-- end restaurant -->
         <!-- Beginning reviews -->
-        <section id="reviews-container">
+				<section id="reviews-container">
           <ul id="reviews-list"></ul>
+        </section>
+				<section id="review-form">
+					<h3>Add a review</h3>
+					<form class="" action="" method="post" id="add-review"  aria-label="Add review">
+						<div class="form-input">
+							<label for="username">Name</label>
+							<input type="text" name="username" value="" id="username" required aria-required="true">
+						</div>
+						<div class="form-input">
+							<label for="comments">Comments</label>
+							<textarea name="comments" id="comments" required aria-required="true"></textarea>
+						</div>
+						<div class="form-input">
+							<label id="rate-label">Rating</label>
+							<ul class="rating-input" aria-labelledby="rate-label" role="radiogroup" aria-required="true">
+								<li>
+									<button class="star-rate" type="button" name="rate1" role="radio" aria-label="1 star" aria-checked="false">☆</button>
+								</li>
+								<li>
+									<button class="star-rate" type="button" name="rate2" role="radio" aria-label="2 stars" aria-checked="false">☆</button>
+								</li>
+								<li>
+									<button class="star-rate" type="button" name="rate3" role="radio" aria-label="3 stars" aria-checked="false">☆</button>
+								</li>
+								<li>
+									<button class="star-rate" type="button" name="rate4" role="radio" aria-label="4 stars" aria-checked="false">☆</button>
+								</li>
+								<li>
+									<button class="star-rate" type="button" name="rate5" role="radio" aria-label="5 stars" aria-checked="false">☆</button>
+								</li>
+							</ul>
+							<p id="rating-error">
+								Please select a rating!
+							</p>
+							<input type="number" name="rating" value="" id="rating" hidden>
+						</div>
+						<div class="form-input">
+							<button type="submit" name="submit">Add Review</button>
+						</div>
+					</form>
         </section>
       </div>
     </div>
@@ -76,7 +116,7 @@
 
   <!-- Beginning footer -->
   <footer id="footer">
-    <div id="simple-toast">A new version is available <button id="refresh">refresh</button> <button id="dismiss">dismiss</button></div>
+    <div id="simple-toast">A new version is available <button id="refresh" disabled>refresh</button> <button id="dismiss" disabled>dismiss</button></div>
     <span>Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.</span>
   </footer>
   <!-- End footer -->

@@ -32,7 +32,7 @@
     margin-top: 45px;
     width: 100%;
   }
-  
+
   #map {
     height: 250px;
     max-height: 250px;
@@ -50,7 +50,7 @@
     transition: max-height .5s;
     /* justify-content: center; */
   }
-  
+
   .filter-options button{
     display: block;
     width: 40%;
@@ -66,62 +66,62 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
     border-right: 1px solid rgba(0, 0, 0, 0.3);
   }
-  
+
   #arrow {
     font-size: 9pt
   }
-  
+
   #filter-fields select{
     max-width: calc(100% - 20px)
   }
-  
+
   .open #filter-fields {
     transform: translateY(0px);
   }
-  
+
   .open.filter-options{
     max-height: 500px;
   }
-  
+
   #map.smaller{
     max-height: 200px;
   }
-  
+
   #filter-fields {
     width: 60%;
     /* position: relative; */
     transform: translateY(-90px);
     transition: transform .3s
   }
-  
+
   #filter-fields select:last-child {
     margin-top: 0;
   }
-  
+
   #restaurants-list li {
     height: auto;
-    position: inherit;
+    /* position: inherit; */
   }
   #restaurants-list li .actions {
   	width: 100%;
   	position: inherit;
   	/* bottom: 0; */
   }
-  
+
   #footer {
   	height: 50px;
   	position: fixed;
   	bottom: 0;
   }
-  
+
 }
 
 @media screen and (max-width: 800px) {
-  
+
   #breadcrumb {
     display: none;
   }
-  
+
   .inside #map-container {
     width: 100%;
     height: auto;
@@ -138,7 +138,7 @@
     flex-wrap: wrap;
     justify-content: center; */
   }
-  
+
   .inside #restaurant-container{
     padding-top: 20px
   }
@@ -147,7 +147,7 @@
     width: 100%;
     /* padding: 20px; */
   }
-  
+
   .inside #restaurant-container h1,
   .inside #reviews-container h2{
     font-weight: 400;
@@ -161,7 +161,7 @@
 }
 
 @media screen and (min-width: 451px) and (max-width: 800px) {
-  
+
   .inside #map-container {
     width: 100%;
     height: auto;
@@ -173,7 +173,7 @@
   }
   .inside #map {
     height: 250px;
-  }  
+  }
 }
 
 @media screen and (min-width: 801px) {
@@ -184,13 +184,13 @@
     width: 100%;
     padding: 5px 40px 10px;
   }
-  
+
   #restaurant-all {
     padding: 0;
   }
-  
+
   .inside #maincontent {
-    margin: auto; 
+    margin: auto;
   	position: fixed;
     top: 100px;
     height: calc(100% - 140px);
@@ -198,14 +198,14 @@
     justify-content: center;
     width: 100%;
   }
-  
+
   .inside .main {
-    /* margin: auto; 
+    /* margin: auto;
   	position: fixed; */
     position: relative;
     height: 100%;
   }
-  
+
   .inside #map-container {
     width: 50%;
   	max-width: 500px;

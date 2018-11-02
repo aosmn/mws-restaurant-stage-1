@@ -369,7 +369,7 @@ header {
   width: 100%;
 }
 #reviews-container {
-  padding: 30px 40px 80px;
+  padding: 30px 40px;
 }
 #reviews-container h2 {
   color: var(--blue);
@@ -428,6 +428,57 @@ header {
   /* margin-top: -10px */
 }
 
+#review-form {
+  padding: 30px 40px 80px;
+}
+
+.form-input label {
+	display: block;
+  padding-bottom: 5px;
+}
+
+.form-input textarea{
+	max-width: 100%;
+  min-width: 100%;
+	border: 0;
+	border-bottom: 1px solid lightgrey;
+}
+
+.form-input input[type='text']{
+	width: 100%;
+	border: 0;
+  border-bottom: 1px solid lightgrey;
+}
+#rating-error {
+	color: red;
+	display: none;
+}
+.form-input {
+	padding: 10px;
+}
+
+.rating-input {
+	padding: 0;
+	min-width: 220px;
+}
+.rating-input li{
+	display: inline-block
+}
+.rating-input button{
+	background: none;
+	border: none;
+	color: var(--links);
+	font-size: 2rem;
+	font-weight: 600;
+}
+
+.rating-input button:hover{
+	cursor: pointer;
+}
+
+/* .rating-input button:focus{
+	outline: none;
+} */
 
 #simple-toast button{
   text-decoration: underline;
@@ -517,13 +568,13 @@ header {
 	position: absolute;
 	right: 0;
 	top: 0;
-	color: orange;
+	color: var(--links);
 	font-size: 2rem;
 }
 
-.favorite:focus {
+/* .favorite:focus {
 	outline: none;
-}
+} */
 
 .favorite:hover {
 	cursor: pointer;
