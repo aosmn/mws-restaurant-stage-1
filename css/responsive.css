@@ -134,6 +134,7 @@
     width: 100%;
     max-width: 500px;
     margin: auto;
+		height: calc(100% - 275px);
     /* display: flex;
     flex-wrap: wrap;
     justify-content: center; */
