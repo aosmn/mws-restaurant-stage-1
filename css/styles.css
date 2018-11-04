@@ -591,3 +591,17 @@ header {
 .title {
 	position: relative;
 }
+
+*:focus{
+	outline-color: var(--secondary) !important
+}
+
+button[type=submit]{
+	background: var(--links);
+  color: white;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 15px;
+  font-weight: 600;
+}
