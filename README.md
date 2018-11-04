@@ -2,9 +2,11 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Usage
+## Development and testing
 This project uses npm scripts to build and process distribution files.
 To run the application run `npm run start` after installing node packages using `npm install`
+
+For development, to use nodemon to watch change in files and auto-build files, use `npm run watch-start`
 
 ## Leaflet.js and Mapbox:
 
