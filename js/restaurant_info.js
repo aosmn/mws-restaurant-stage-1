@@ -11,6 +11,7 @@ function updateIndicator(e) {
 		snackbar.className = "show";
 	} else if (e.type == "online") {
 		snackbar.className = snackbar.className.replace("show", "");
+		DBHelper.setFavoriteRestaurantsOnline();
 	}
 }
 
@@ -78,8 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	const favoriteBtn = document.getElementsByClassName('favorite')[0];
 	favoriteBtn.addEventListener('click', (e) => {
-		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
-		// var data = {is_favorite: 'false'};
 		var btnHtml = '&#9734;'
 		var isChecked = 'false';
 
@@ -90,16 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		favoriteBtn.setAttribute('aria-checked', isChecked);
 
-		fetch(url, {
-			method: 'PUT', // or 'PUT'
-			body: JSON.stringify({is_favorite: isChecked}), // data can be `string` or {object}!
-			headers:{
-				'Content-Type': 'application/json'
+		DBHelper.setFavoriteRestaurant(restaurant, isChecked, (error) => {
+			if (error) { // Got an error!
+				error => console.error('Error:', error);
+			} else {
+				favoriteBtn.innerHTML = btnHtml;
 			}
-		}).then(res => {
-			favoriteBtn.innerHTML = btnHtml;
-		})
-		.catch(error => console.error('Error:', error));
+		});
 	});
 });
 

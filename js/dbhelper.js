@@ -4,12 +4,15 @@ import 'whatwg-fetch';
  */
 /*eslint no-unused-vars: "error"*/
 
-const dbPromise = idb.open('restaurant-reviews-db', 1, upgradeDb => {
+const dbPromise = idb.open('restaurant-reviews-db', 2, upgradeDb => {
 	let resStore = {};
 	switch (upgradeDb.oldVersion) {
-	case 0:
-		resStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
-		resStore.createIndex('id', 'id');
+		case 0:
+			resStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+			resStore.createIndex('id', 'id');
+		case 1:
+			const resStore = upgradeDb.transaction.objectStore('restaurants');
+			resStore.createIndex('offline', 'offline');
 	}
 });
 
@@ -247,6 +250,67 @@ class DBHelper {
     return marker;
   } */
 
+	static setFavoriteRestaurant(restaurant, isFavorite, callback) {
+		let url = `${DBHelper.DATABASE_URL}/${restaurant.id}`;
+		return fetch(url, {
+			method: 'PUT', // or 'PUT'
+			body: JSON.stringify({is_favorite: isFavorite}), // data can be `string` or {object}!
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		}).then(res => {
+			return res.json();
+		})
+		.then((result)=>{
+			dbPromise.then(function(db) {
+				const tx = db.transaction('restaurants', 'readwrite');
+				const objectStore = tx.objectStore('restaurants');
+				objectStore.put(restaurant);
+				return tx.complete;
+			}).then(()=>{
+				callback(null);
+			}).catch( err => callback(err));
+		})
+		.catch(error => {
+			dbPromise.then(function(db) {
+				const tx = db.transaction('restaurants', 'readwrite');
+				const objectStore = tx.objectStore('restaurants');
+				restaurant.is_favorite = isFavorite;
+				restaurant.offline = "true";
+
+			  objectStore.put(restaurant);
+			  return tx.complete;
+			}).then(function() {
+			  console.log('item updated!');
+				callback(null)
+			}).catch((error) => {
+				callback(error);
+			});
+		});
+	}
+
+	static setFavoriteRestaurantsOnline(){
+		dbPromise.then(db => {
+			const tx = db.transaction('restaurants');
+			const objectStore = tx.objectStore('restaurants');
+			const offlineIndex = objectStore.index('offline')
+			return offlineIndex.getAll("true");
+		}).then((restaurants) => {
+			if (restaurants && restaurants.length > 0){
+					for (var i = 0; i < restaurants.length; i++) {
+						let restaurant = restaurants[i];
+						delete restaurant.offline;
+						DBHelper.setFavoriteRestaurant(restaurant, restaurant.is_favorite, (err) => {
+							if (err) {
+								console.log(err);
+							} else {
+								console.log("updated online");
+							}
+						});
+					}
+			}
+		});
+	}
 }
 
 export default DBHelper;

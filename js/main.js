@@ -16,6 +16,7 @@ function updateIndicator(e) {
 		snackbar.className = "show";
 	} else if (e.type == "online") {
 		snackbar.className = snackbar.className.replace("show", "");
+		DBHelper.setFavoriteRestaurantsOnline();
 	}
 }
 
@@ -31,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	initMap(); // added
 	fetchNeighborhoods();
 	fetchCuisines();
+	if (!navigator.onLine) {
+		const snackbar = document.getElementById('snackbar');
+		snackbar.className = "show";
+	}
 
 	const neighbourSelect = document.getElementById('neighborhoods-select');
 	const cuisineSelect = document.getElementById('cuisines-select');
@@ -238,10 +243,8 @@ const createRestaurantHTML = (restaurant) => {
 	favoriteBtn.setAttribute('role', 'checkbox');
 
 	favoriteBtn.addEventListener('click', (e) => {
-		var url = `http://localhost:1337/restaurants/${restaurant.id}`;
-		var data = {is_favorite: 'false'};
-		var btnHtml = '&#9734;'
-		var isChecked = 'false'
+		let btnHtml = '&#9734;'
+		let isChecked = 'false';
 
 		if (favoriteBtn.innerHTML == '&#9734;' || favoriteBtn.innerHTML == '☆') {
 			isChecked = 'true';
@@ -250,16 +253,13 @@ const createRestaurantHTML = (restaurant) => {
 
 		favoriteBtn.setAttribute('aria-checked', isChecked);
 
-		fetch(url, {
-			method: 'PUT', // or 'PUT'
-			body: JSON.stringify({is_favorite: isChecked}), // data can be `string` or {object}!
-			headers:{
-				'Content-Type': 'application/json'
+		DBHelper.setFavoriteRestaurant(restaurant, isChecked, (error) => {
+			if (error) { // Got an error!
+				error => console.error('Error:', error)
+			} else {
+				favoriteBtn.innerHTML = btnHtml;
 			}
-		}).then(res => {
-			favoriteBtn.innerHTML = btnHtml;
-		})
-		.catch(error => console.error('Error:', error));
+		});
 	});
 
 
