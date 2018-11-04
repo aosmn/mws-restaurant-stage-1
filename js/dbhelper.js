@@ -4,15 +4,21 @@ import 'whatwg-fetch';
  */
 /*eslint no-unused-vars: "error"*/
 
-const dbPromise = idb.open('restaurant-reviews-db', 2, upgradeDb => {
+const dbPromise = idb.open('restaurant-reviews-db', 3, upgradeDb => {
 	let resStore = {};
+	let revStore = {};
 	switch (upgradeDb.oldVersion) {
 		case 0:
 			resStore = upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
 			resStore.createIndex('id', 'id');
 		case 1:
-			const resStore = upgradeDb.transaction.objectStore('restaurants');
+			resStore = upgradeDb.transaction.objectStore('restaurants');
 			resStore.createIndex('offline', 'offline');
+		case 2:
+			revStore = upgradeDb.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
+			revStore.createIndex('id', 'id');
+			revStore.createIndex('offline', 'offline');
+			revStore.createIndex('restaurant_id', 'restaurant_id');
 	}
 });
 
@@ -25,14 +31,14 @@ class DBHelper {
    */
 	static get DATABASE_URL() {
 		const port = 1337; // Change this to your server port
-		return `http://localhost:${port}/restaurants`;
+		return `http://localhost:${port}`;
 	}
 
 	/**
    * Fetch all restaurants.
    */
 	static fetchRestaurants(id) {
-		let url = DBHelper.DATABASE_URL;
+		let url = `${DBHelper.DATABASE_URL}/restaurants`;
 
 		if (id) {
 			url+= `/${id}`;
@@ -251,7 +257,7 @@ class DBHelper {
   } */
 
 	static setFavoriteRestaurant(restaurant, isFavorite, callback) {
-		let url = `${DBHelper.DATABASE_URL}/${restaurant.id}`;
+		let url = `${DBHelper.DATABASE_URL}/restaurants/${restaurant.id}`;
 		return fetch(url, {
 			method: 'PUT', // or 'PUT'
 			body: JSON.stringify({is_favorite: isFavorite}), // data can be `string` or {object}!
@@ -307,6 +313,111 @@ class DBHelper {
 								console.log("updated online");
 							}
 						});
+					}
+			}
+		});
+	}
+
+	// REVIEWS API
+
+	static createReview(review, callback){
+		var url = `${DBHelper.DATABASE_URL}/reviews/`;
+		fetch(url, {
+			method: 'POST', // or 'PUT'
+			body: JSON.stringify(review), // data can be `string` or {object}!
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(review => {
+			DBHelper.addReviewToDB(review, false).then(function() {
+			  console.log('item updated!');
+				if (callback)
+					callback(review);
+			}).catch((error) => {
+				// callback(error);
+				console.error('Error:', error)
+			});
+
+			// callback(review);
+		})
+		.catch(error => {
+			// save to db
+			DBHelper.addReviewToDB(review, true).then(function() {
+			  console.log('item added!');
+				if (callback)
+					callback(review);
+			}).catch((error) => {
+				// callback(error);
+				console.error('Error:', error)
+			});
+		});
+	}
+
+	static addReviewToDB(review, offline){
+		return dbPromise.then(function(db) {
+			const tx = db.transaction('reviews', 'readwrite');
+			const objectStore = tx.objectStore('reviews');
+			if(offline)
+				review.offline = "true";
+
+			objectStore.put(review);
+			return tx.complete;
+		})
+	}
+
+	static getAllReviews(id, callback){
+		var url = `${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${id}`;
+
+		fetch(url, {
+			method: 'GET',
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+		.then(reviews => {
+			dbPromise.then(function(db) {
+				const tx = db.transaction('reviews', 'readwrite');
+				const objectStore = tx.objectStore('reviews');
+				for (let i = 0; i < reviews.length; i++) {
+					const review = reviews[i];
+					objectStore.put(review); // returns a promise
+				}
+				return tx.complete;
+			}).then(function() {
+				console.log('success');
+				callback(reviews);
+			});
+		})
+		.catch(error => {
+			// get from db
+			dbPromise.then(db => {
+				const tx = db.transaction('reviews');
+				const objectStore = tx.objectStore('reviews');
+				const restaurantIndex = objectStore.index('restaurant_id');
+
+				return restaurantIndex.getAll(id);
+			}).then((reviews) => {
+				console.log("loaded from db");
+				callback(reviews);
+			});
+		});
+	}
+
+	static addReviewsOnline(){
+		dbPromise.then(db => {
+			const tx = db.transaction('reviews');
+			const objectStore = tx.objectStore('reviews');
+			const offlineIndex = objectStore.index('offline')
+			return offlineIndex.getAll("true");
+		}).then((reviews) => {
+			if (reviews && reviews.length > 0){
+					for (var i = 0; i < reviews.length; i++) {
+						let review = reviews[i];
+						delete review.offline;
+						DBHelper.createReview(review);
 					}
 			}
 		});

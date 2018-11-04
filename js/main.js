@@ -17,6 +17,7 @@ function updateIndicator(e) {
 	} else if (e.type == "online") {
 		snackbar.className = snackbar.className.replace("show", "");
 		DBHelper.setFavoriteRestaurantsOnline();
+		DBHelper.addReviewsOnline()
 	}
 }
 

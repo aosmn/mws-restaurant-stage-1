@@ -12,6 +12,7 @@ function updateIndicator(e) {
 	} else if (e.type == "online") {
 		snackbar.className = snackbar.className.replace("show", "");
 		DBHelper.setFavoriteRestaurantsOnline();
+		DBHelper.addReviewsOnline()
 	}
 }
 
@@ -25,6 +26,11 @@ window.addEventListener('offline', updateIndicator);
  */
 document.addEventListener('DOMContentLoaded', () => {
 	initMap();
+
+	if (!navigator.onLine) {
+		const snackbar = document.getElementById('snackbar');
+		snackbar.className = "show";
+	}
 
 	const addReview = document.getElementById('add-review');
 	const starBtns = document.getElementsByClassName('star-rate');
@@ -40,27 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
 		ratingError.style.display = "none";
 
 		if (e.target.rating.value) {
-			var url = `http://localhost:1337/reviews/`;
 			var data = {name: e.target.username.value,
 				comments: e.target.comments.value,
 				rating: e.target.rating.value,
 				restaurant_id: self.restaurant.id};
-				fetch(url, {
-					method: 'POST', // or 'PUT'
-					body: JSON.stringify(data), // data can be `string` or {object}!
-					headers:{
-						'Content-Type': 'application/json'
-					}
-				}).then(res => res.json())
-				.then(review => {
+
+				let cb = (review) => {
 					const ul = document.getElementById('reviews-list');
 					ul.appendChild(createReviewHTML(review));
 					addReview.reset()
 					for (var i = 0; i < starBtns.length; i++) {
 						starBtns[i].innerHTML = '&#9734;';
 					}
-				})
-				.catch(error => console.error('Error:', error));
+				}
+
+				DBHelper.createReview(data, cb);
 		} else {
 			ratingError.style.display = "inherit";
 		}
@@ -267,15 +267,7 @@ const fillReviewsHTML = (restaurant = self.restaurant) => {
 	title.innerHTML = 'Reviews';
 	container.appendChild(title);
 
-	var url = `http://localhost:1337/reviews/?restaurant_id=${restaurant.id}`;
-
-	fetch(url, {
-		method: 'GET', // or 'PUT'
-		headers:{
-			'Content-Type': 'application/json'
-		}
-	}).then(res => res.json())
-	.then(reviews => {
+	const cb = (reviews) => {
 		if (!reviews) {
 			const noReviews = document.createElement('p');
 			noReviews.innerHTML = 'No reviews yet!';
@@ -287,8 +279,9 @@ const fillReviewsHTML = (restaurant = self.restaurant) => {
 			ul.appendChild(createReviewHTML(review));
 		});
 		container.appendChild(ul);
-	})
-	.catch(error => console.error('Error:', error));
+	};
+
+	DBHelper.getAllReviews(restaurant.id, cb);
 };
 
 /**
